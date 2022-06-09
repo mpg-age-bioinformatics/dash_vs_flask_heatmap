@@ -7,7 +7,7 @@ from heatmap.mainfunc import make_figure, figure_defaults
 
 from heatmap import app
 
-dashapp = dash.Dash("dashapp",url_base_pathname=f'/dashapp/', server=app )
+dashapp = dash.Dash("dashapp",url_base_pathname=f'/demo/dashapp/', server=app )
 
 pa=figure_defaults()
 # df=pd.DataFrame({"i":["AA","BB","CC"],"A":[1,2,4],"B":[5,5,7] })

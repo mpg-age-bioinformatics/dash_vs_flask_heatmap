@@ -7,7 +7,7 @@ import json
 import pandas as pd
 
 
-@app.route('/flaskapp',methods=['GET', 'POST'])
+@app.route('/demo/flaskapp',methods=['GET', 'POST'])
 def flaskapp():
     pa=figure_defaults()
     # df=pd.DataFrame({"i":["AA","BB","CC"],"A":[1,2,4],"B":[5,5,7] })

@@ -1,0 +1,43 @@
+version: '3.7'
+
+services:
+
+ server:
+  container_name: server
+  # image: mpgagebioinformatics/myapp:stable
+  build:
+    context: ./
+    dockerfile: Dockerfile
+  restart: always
+  volumes:
+   - ./:/heatmap
+  environment:
+   - N_WORKERS=4
+   - FLASK_ENV=development
+  labels:
+   - traefik.http.services.server.loadbalancer.server.port=8000
+   - traefik.http.middlewares.server_https.redirectscheme.scheme=https
+   - traefik.http.routers.server.entrypoints=web
+   - traefik.http.routers.server.rule=Host(`heatmap.localhost`)
+   - traefik.http.routers.server.middlewares=server_https@docker
+   - traefik.http.routers.server_https.rule=Host(`heatmap.localhost`)
+   - traefik.http.routers.server_https.tls=true
+   - traefik.http.routers.server_https.entrypoints=websecure
+
+ reverse-proxy:
+  image: traefik:v2.6
+  command: 
+    - --api.insecure=true
+    - --providers.docker=true
+    - --entrypoints.websecure.address=:443
+    - --entrypoints.web.address=:80
+  ports:
+    - "80:80"
+    - "443:443"
+    - "8080:8080"
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+  labels:
+    - traefik.enable=false
+  depends_on:
+   - server

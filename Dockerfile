@@ -34,9 +34,15 @@ RUN groupadd ${BUILD_NAME} --gid=1000 && useradd -m ${BUILD_NAME} --uid=1000 --g
     chpasswd
 
 RUN mkdir /${BUILD_NAME} && chown -R ${BUILD_NAME}:${BUILD_NAME} /${BUILD_NAME}
-COPY requirements.txt /${BUILD_NAME}/requirements.txt
-RUN pip3 install --ignore-installed pyxdg==0.26 ; pip3 install -r /${BUILD_NAME}/requirements.txt
 
+COPY requirements.txt /${BUILD_NAME}/requirements.txt
+COPY heatmap.py /${BUILD_NAME}/heatmap.py
+COPY .flaskenv /${BUILD_NAME}/.flaskenv
+COPY entrypoint.sh /${BUILD_NAME}/entrypoint.sh
+
+COPY heatmap /${BUILD_NAME}/heatmap
+
+RUN pip3 install --ignore-installed pyxdg==0.26 ; pip3 install -r /${BUILD_NAME}/requirements.txt
 
 USER ${BUILD_NAME}:${BUILD_NAME}
 WORKDIR /${BUILD_NAME}
